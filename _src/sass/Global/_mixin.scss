@@ -1,0 +1,77 @@
+@use 'variables' as *;
+@use 'function' as *;
+@use "sass:math";
+
+// レスポンシブ
+@mixin pc($break-point: $break-point) {
+    @media screen and (min-width: #{$break-point + 1}), print {
+        @content;
+    }
+}
+
+@mixin sp($break-point: $break-point) {
+    @media screen and (max-width: #{$break-point}) {
+        @content;
+    }
+}
+
+// 背景画像差し替え
+@mixin backgroundFig($url) {
+    background: url("#{$imgPath}#{$url}") no-repeat 50% 50% / contain;
+}
+
+//疑似要素（絶対配置）
+@mixin pseudoElement {
+    content: '';
+    display: block;
+    position: absolute;
+}
+
+// フォントサイズ
+@mixin setFontSize($fz, $lh) {
+    font-size: #{$fz}px;
+    line-height: math.div($lh, $fz);
+}
+
+@mixin setFontSizeSP($fz, $lh) {
+    font-size: convertToVw($fz);
+    line-height: math.div($lh, $fz);
+}
+
+// フォントサイズ ※最初と最後の行間余白を打ち消す
+@mixin adjustTextMargin($fs,$lh,$offset: 0) {
+    margin-top: ($offset - (getHalfReading($fs,$lh)) * 1px);
+    margin-bottom: (0 - (getHalfReading($fs,$lh)) * 1px);
+    font-size: $fs * 1px;
+    line-height: math.div($lh, $fs);
+}
+
+@mixin adjustTextMarginSP($fs,$lh,$offset: 0) {
+    margin-top: convertToVw($offset - (getHalfReading($fs,$lh)));
+    margin-bottom: convertToVw(0 - (getHalfReading($fs,$lh)));
+    font-size: convertToVw($fs);
+    line-height: math.div($lh, $fs);
+}
+
+
+// マウスポインター対応端末でのみホバー適用
+@mixin isHoverDevice() {
+    @media (hover: hover) and (pointer: fine) {
+        backface-visibility: hidden;
+        &:hover {
+            @content;
+        }
+    }
+}
+
+
+// 矢印アイコンのsvg
+@mixin svgArrow($color: fff) {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9.621' height='16.242'%3E%3Cpath d='m2.121 2.121 6 6-6 6' fill='none' stroke='%23#{$color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3'/%3E%3C/svg%3E") no-repeat top left / contain;
+}
+
+
+// svgArrow用 カラーコード変更関数
+@function re-color($code) {
+    @return str-slice("#{$code}", 2);
+}

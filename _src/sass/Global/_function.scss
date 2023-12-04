@@ -1,0 +1,12 @@
+@use 'variables' as *;
+@use "sass:math";
+
+// px数をvwに変換
+@function convertToVw($pxNum, $viewport: 750) {
+    @return math.div($pxNum, $viewport) * 100vw;
+}
+
+// ハーフレディングを返す
+@function getHalfReading($fz: $defaultFontSize, $lh: $defaultLineHeight) {
+    @return math.round(math.div(($lh - $fz), 2));
+}
